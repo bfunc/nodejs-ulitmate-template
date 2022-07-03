@@ -1,0 +1,22 @@
+# Mac.
+.DS_STORE
+
+# Project
+.vscode
+.history
+.reference
+.backup
+.test
+.logs
+.cache
+
+# Node
+/node_modules
+
+# Testing
+/coverage
+
+# Files
+*.log
+*.7z
+*.zip
