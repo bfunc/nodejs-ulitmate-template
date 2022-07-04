@@ -1,10 +1,7 @@
 import { readdirSync } from 'fs'
 import { resolve } from 'path'
-import { capitalize } from 'utils/utils'
-const fileExtensions = '.ts'
-const getFilename = (filename: string) => filename + fileExtensions
 
-const readDirContents = (root: string) =>
+export const readDirContents = (root: string) =>
   readdirSync(root, { withFileTypes: true })
     .filter(dirent => {
       if (dirent.isDirectory()) {
@@ -18,16 +15,20 @@ const readDirContents = (root: string) =>
     .map(dirent => dirent.name)
 
 export const loadModule = async (filename: string) => {
-  const module = await import(getFilename(filename))
+  const module = await import(filename)
   return module.default
 }
 
 export const loadDependencies = async ({
   root,
   filenames,
+  extension,
+  getDependencyName,
 }: {
   root: string
+  extension: string
   filenames: string[]
+  getDependencyName: (_: { name: string; file: string }) => string
 }) => {
   // Read directory names in specified dir, example: [feature1, feature2] from /modules
 
@@ -41,7 +42,7 @@ export const loadDependencies = async ({
           filenames.map(async file => {
             const path = resolve(root, dirname, file)
             try {
-              const module = await loadModule(path)
+              const module = await loadModule(`${path}.${extension}`)
               return { name: dirname, file, module }
             } catch {
               return undefined
@@ -57,7 +58,7 @@ export const loadDependencies = async ({
     .filter(module => !!module)
     .reduce((acc, cur) => {
       if (!cur) return acc
-      acc[capitalize(cur.name) + capitalize(cur.file)] = cur.module
+      acc[getDependencyName(cur)] = cur.module
       return acc
     }, {} as Record<string, object>)
 
