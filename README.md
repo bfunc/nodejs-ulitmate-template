@@ -1,86 +1,91 @@
 ## TOC
 
-- [Introduction](#introduction)
+- [Quick start](#quick-start)
 - [Tooling](#tooling)
-- [Unit Tests](#unit-tests)
-- [Chapter 3](#chapter-3)
-
+- [Unit tests](#unit-tests)
+- [Project structure](#project-structure)
+- [Dependency injection](#dependency-injection)
+- [Automatic module loading](#automatic-module-loading)
+- [Final words](#final-words)
+` `  
+` `  
+` `  
 # Ultimate Node.js Starter that Scales with Native TypeScript, Super Fast Unit Tests, DI and more Batteries Included
-
-## Introduction <a name="introduction"></a>
 
 The purpose of this post is to provide you with tool to start your new node.js projects with accent on scalability and developer experience.
 
 The main idea is use minimum dependencies, easier maintenance, better re-compiling times, faster testing, less boilerplate.
 
-## Quick Start
+> Important thing to mention, if you have big team and large scale application, it is crucial not to reinvent the wheel and to base upon [good architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) and well established framework. In this case it is worth to consider using [nest.js](https://docs.nestjs.com/), it's mindset is to enable best practices for large enterprise applications, it is heavily inspired by Angular.
+
+` `  
+` `  
+` ` 
+# Quick Start <a name="quick-start"></a>
 
 Clone the repository with
 
 ```
-git clone --depth=1 https://github.com/joshuaalpuerto/node-ddd-boilerplate.git
+git clone --depth=1 https://github.com/bfunc/nodejs-ulitmate-template.git
 ```
 
 Install the dependencies with you favorite package manager
 
 ```
-npm i
+npm install
 ```
 
 Run the application in development mode with
 
 ```
-yarn start
+npm run dev
 ```
 
 > `ts-node-dev` will effectively restart node process on files change
 
-Access http://localhost:<PORT>/api/<VERSION>
-
+Access 
 ```
-http://localhost:4000/api/v1
+http://localhost:4000
 ```
 
 Run the application in production mode
 
 ```
-yarn start
+npm start
 ```
-
-> check out env
 
 You're ready to go!
 
 ### Additional commands
 
-Run unit test
+Run unit tests
 
 ```
-ut
+npm run test
 ```
 
 Run test coverage
 
 ```
-coverage
+npm run coverage
 ```
 
 Auto format all project files with `prittier`
 
 ```
-format
+npm run format
 ```
 
 Run ESlint on all project files
 
 ```
-eslint
+npm run lint
 ```
 
-[github](http://image.pnglink)
 
-> Important thing to mention, if you have big team and large scale application, it is crucial not to reinvent the wheel and to base upon [good architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) and well established framework. In this case it is worth to consider using [nest.js](https://docs.nestjs.com/), it's mindset is to enable best practices for large enterprise applications, it is heavily inspired by Angular.
-
+` `  
+` `  
+` ` 
 # Tooling <a name="tooling"></a>
 
 ## Native TypeScript
@@ -110,23 +115,28 @@ Run `lint` command run linter on whole project
 
 ## Environment
 
-Use .env file to simplify setting environment variables for development, it will be
+Use `.env` file to simplify setting environment variables for development, it will be
 picked up by [dotenv](https://www.npmjs.com/package/dotenv).
-.env files may contain values such as database passwords or API keys. It is bad practice committing .env files to version control.
+Env files may contain values such as database passwords or API keys. It is bad practice committing `.env` files to version control.
 
 ## Logging
 
-pino
+`pino` json logger, because it is standard in most enterprise applications.
 
 ## Webserver
 
-Fastify
+`Fastify` web framework, becasue it is highly focused on providing the best developer experience with the least overhead.
+
+
+` `  
+` `  
+` ` 
 
 # Unit Test <a name="unit-test"></a>
 
 Testing is very important part of development process, that is why here we are going to bet on new player on unit test frameworks field [Vitest](https://vitest.dev/guide/features.html). In this case benefits are more important than potential risk choosing less established solution in enterprise (in any case it is worth a try because `Vitest` and `Jest` APIs and snapshots are compatible).
 
-### Benefits of using `Vitest` over `Jest`
+# Benefits of using `Vitest` over `Jest`
 
 1. Main benefit is speed, in testing speed is important, especially if you tend to work in TDD/BDD style, every millisecond matters and `Vitest` is way faster than Jest in watch mode.
 2. It understands TypeScript natively, no need to run transpiler
@@ -134,6 +144,11 @@ Testing is very important part of development process, that is why here we are g
 4. Vitest UI, test dashboard interface. [demo](https://stackblitz.com/edit/vitejs-vite-w46jsw?file=README.md)
 
 Warning though, `Vitest` is in active development and still considered as not fully stable. Checkout [doc page](https://vuejs.org/guide/scaling-up/testing.html#recommendation) for more info.
+
+
+` `  
+` `  
+` ` 
 
 # Project structure <a name="project-structure"></a>
 
@@ -209,7 +224,11 @@ src
 └── index.ts
 ```
 
-## Dependency Injection
+` `  
+` `  
+` ` 
+
+# Dependency Injection <a name="dependency-injection"></a>
 
 The idea behind dependency injection is really simple, it is basically providing list of dependencies as parameters instead of having hardcoded imports.
 
@@ -235,13 +254,21 @@ container.register({
 
 Take a look at [awilix docs](https://github.com/jeffijoe/awilix#asfunction) for more information.
 
-## Automatic module loading
+` `  
+` `  
+` ` 
+
+# Automatic module loading <a name="automatic-module-loading"></a>
 
 Automatic module loading from filesystem (like pages in next.js) is used. The convention is that before container creation script will look into modules folder, traverse its content and auto load dependencies of defined types, like models, controllers, services etc. Check `src/index.ts` for list of filenames that will be automatically loaded.
 
 For now `dependenciesLoader.ts` script is very basic, for more advanced scenarios with nested folders or glob patterns you can use built-in `awilix` [loadModules](https://github.com/jeffijoe/awilix#auto-loading-modules) function.
 
-## Final words
+` `  
+` `  
+` ` 
+
+# Final words <a name="final-words"></a>
 
 Ultimate Starter was designed to be as much flexible as less opinionated as possible, that is why Database drivers, ORMs or authentication libraries were not included as part of the starter, despite there is strong temptation to add at least integration with [supabase](https://supabase.com/).
 
@@ -256,12 +283,3 @@ It is not easy to find the Golden Mean, here is list of things that are currentl
 
 If there is something that is missing to achieve the best developer experience possible, please do not hesitate and leave a comment. Your comments may be extremely valuable, other people may encounter the same things you do. Sharing is caring :)
 
-====================
-
-> There are plenty of node.js starters out there in the web, however some of them are too basic, some of them are built around very specific frameworks and are too rigid to adapt to changing business needs. It is not easy to find the Golden Mean, that is why the purpose of this post is to provide you the most up to date tool to start your new node.js projects with accent on scalability and developer experience.
-
-> The idea behind dependency injection is really simple, it is basically providing list of dependencies as parameters instead of having hardcoded imports. Sounds trivial, but it may become overcomplicated, it is important to keep things simple and avoid forcing developers to write helper interfaces and glue code if there is no good reason to do so.
-
-> In Ultimate Starter dependency injection implemented with `awilix` in the most simplest way possible, no interfaces, annotations or any other kind of boilerplate.
-
-> It have its cost of strict typing, however we are using automatic modules loading from filesystem (like pages in next.js) and there is no possibility to types for modules with TypeScript, so there is no benifit to force dependancies to be classes with decorators. however there is only one place in application in `container.ts` with dependency on di library, so it is easy to change it to something more sophisticated.
