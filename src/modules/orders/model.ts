@@ -1,23 +1,30 @@
 import type { Container } from 'container.types'
-import type { Customer } from 'modules/customers/model'
-import type { Product } from 'modules/products/model'
+import { customerSchema } from 'modules/customers/model'
+import { Product, productSchema } from 'modules/products/model'
 import { z } from 'zod'
+import zodToJsonSchema from 'zod-to-json-schema'
+import { JsonSchema7Type } from 'zod-to-json-schema/src/parseDef'
 
-export const orderSchema = z.object({
+// Schemas
+export const orderRecordSchema = z.object({
   id: z.string(),
   customerId: z.string(),
   productIds: z.string().array(),
 })
 
-export type OrderRecord = z.infer<typeof orderSchema>
-export type Order = Pick<OrderRecord, 'id'> & {
-  customer: Customer
-  products: Product[]
-  totalPrice: number
-}
+export const orderSchema = z.object({
+  id: orderRecordSchema.shape.id,
+  customer: customerSchema,
+  products: z.array(productSchema),
+  totalPrice: z.number().positive(),
+})
 
+// Types
+export type Order = z.infer<typeof orderSchema>
+export type OrderRecord = z.infer<typeof orderRecordSchema>
 export type OrdersModel = {
   getList: () => Order[]
+  getListSchema: () => JsonSchema7Type
 }
 
 export default ({
@@ -30,16 +37,17 @@ export default ({
     products.reduce((acc, cur) => acc + cur.price, 0)
 
   return {
+    getListSchema: () => zodToJsonSchema(z.array(orderSchema)),
     getList: () =>
-      OrdersRepository.getList().map(order => {
-        const products = order.productIds.map(productId =>
+      OrdersRepository.getList().map(({ id, productIds, customerId }) => {
+        const products = productIds.map(productId =>
           ProductsModel.getById(productId)
         )
 
         return {
-          id: order.id,
+          id,
           products,
-          customer: CustomersModel.getById(order.customerId),
+          customer: CustomersModel.getById(customerId),
           totalPrice: getDiscount(getTotalPrice(products)),
         }
       }),

@@ -1,12 +1,14 @@
 import { z } from 'zod'
+import zodToJsonSchema from 'zod-to-json-schema'
+import { JsonSchema7Type } from 'zod-to-json-schema/src/parseDef'
 
-const productsSchema = z.object({
+export const productSchema = z.object({
   id: z.string(),
   name: z.string().min(3, { message: 'Must be at least 3 characters' }),
   price: z.number().min(0, { message: 'Must be a positive number' }),
 })
 
-export type Product = z.infer<typeof productsSchema>
+export type Product = z.infer<typeof productSchema>
 
 const db: Record<string, Product> = {
   p1: {
@@ -34,11 +36,15 @@ const db: Record<string, Product> = {
 export type ProductsModel = {
   getList: () => Product[]
   getById: (id: string) => Product
+  getListSchema: () => JsonSchema7Type
+  getByIdSchema: () => JsonSchema7Type
 }
 
 export default (): ProductsModel => {
   return {
     getList: () => Object.values(db),
     getById: (id: string) => db[id],
+    getListSchema: () => zodToJsonSchema(z.array(productSchema)),
+    getByIdSchema: () => zodToJsonSchema(productSchema),
   }
 }
