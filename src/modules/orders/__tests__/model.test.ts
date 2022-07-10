@@ -1,9 +1,9 @@
 import { Container } from 'container.types'
+import customersModelMock from 'modules/orders/__tests__/__mocks__/customers.model.mock'
+import ordersRepositoryMock from 'modules/orders/__tests__/__mocks__/orders.repository.mock'
+import productsModelMock from 'modules/orders/__tests__/__mocks__/products.model.mock'
 import { expect, it } from 'vitest'
 import model from '../model'
-import customersModelMock from './__mocks__/customers.model.mock'
-import ordersRepositoryMock from './__mocks__/orders.repository.mock'
-import productsModelMock from './__mocks__/products.model.mock'
 
 const container = {
   ProductsModel: productsModelMock(),

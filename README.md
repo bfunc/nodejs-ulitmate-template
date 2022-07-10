@@ -6,10 +6,9 @@
 - [Project structure](#project-structure)
 - [Dependency injection](#dependency-injection)
 - [Automatic module loading](#automatic-module-loading)
+- [Swagger documentation generator](#swagger)
 - [Final words](#final-words)
-` `  
-` `  
-` `  
+
 # Ultimate Node.js Starter that Scales with Native TypeScript, Super Fast Unit Tests, DI and more Batteries Included
 
 The purpose of this post is to provide you with tool to start your new node.js projects with accent on scalability and developer experience.
@@ -18,9 +17,6 @@ The main idea is use minimum dependencies, easier maintenance, better re-compili
 
 > Important thing to mention, if you have big team and large scale application, it is crucial not to reinvent the wheel and to base upon [good architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) and well established framework. In this case it is worth to consider using [nest.js](https://docs.nestjs.com/), it's mindset is to enable best practices for large enterprise applications, it is heavily inspired by Angular.
 
-` `  
-` `  
-` ` 
 # Quick Start <a name="quick-start"></a>
 
 Clone the repository with
@@ -43,9 +39,44 @@ npm run dev
 
 > `ts-node-dev` will effectively restart node process on files change
 
-Access 
+Access
+
 ```
 http://localhost:4000
+```
+
+Map of example routes:
+`/docs` - swagger docs
+`/orders` - sample api route
+`/products` - example api route
+`/products/:id` - example api route
+
+```
+└── /
+    ├── docs (GET)
+    │   docs (HEAD)
+    │   └── / (GET)
+    │       / (HEAD)
+    │       ├── * (GET)
+    │       │   * (HEAD)
+    │       ├── uiConfig (GET)
+    │       │   uiConfig (HEAD)
+    │       ├── initOAuth (GET)
+    │       │   initOAuth (HEAD)
+    │       ├── json (GET)
+    │       │   json (HEAD)
+    │       ├── yaml (GET)
+    │       │   yaml (HEAD)
+    │       └── static/
+    │           └── * (GET)
+    │               * (HEAD)
+    ├── orders (GET)
+    │   orders (HEAD)
+    └── products (GET)
+        products (HEAD)
+        └── /
+            └── :id (GET)
+                :id (HEAD)
 ```
 
 Run the application in production mode
@@ -82,10 +113,6 @@ Run ESlint on all project files
 npm run lint
 ```
 
-
-` `  
-` `  
-` ` 
 # Tooling <a name="tooling"></a>
 
 ## Native TypeScript
@@ -127,11 +154,6 @@ Env files may contain values such as database passwords or API keys. It is bad p
 
 `Fastify` web framework, becasue it is highly focused on providing the best developer experience with the least overhead.
 
-
-` `  
-` `  
-` ` 
-
 # Unit Test <a name="unit-test"></a>
 
 Testing is very important part of development process, that is why here we are going to bet on new player on unit test frameworks field [Vitest](https://vitest.dev/guide/features.html). In this case benefits are more important than potential risk choosing less established solution in enterprise (in any case it is worth a try because `Vitest` and `Jest` APIs and snapshots are compatible).
@@ -144,11 +166,6 @@ Testing is very important part of development process, that is why here we are g
 4. Vitest UI, test dashboard interface. [demo](https://stackblitz.com/edit/vitejs-vite-w46jsw?file=README.md)
 
 Warning though, `Vitest` is in active development and still considered as not fully stable. Checkout [doc page](https://vuejs.org/guide/scaling-up/testing.html#recommendation) for more info.
-
-
-` `  
-` `  
-` ` 
 
 # Project structure <a name="project-structure"></a>
 
@@ -224,10 +241,6 @@ src
 └── index.ts
 ```
 
-` `  
-` `  
-` ` 
-
 # Dependency Injection <a name="dependency-injection"></a>
 
 The idea behind dependency injection is really simple, it is basically providing list of dependencies as parameters instead of having hardcoded imports.
@@ -254,19 +267,15 @@ container.register({
 
 Take a look at [awilix docs](https://github.com/jeffijoe/awilix#asfunction) for more information.
 
-` `  
-` `  
-` ` 
-
 # Automatic module loading <a name="automatic-module-loading"></a>
 
 Automatic module loading from filesystem (like pages in next.js) is used. The convention is that before container creation script will look into modules folder, traverse its content and auto load dependencies of defined types, like models, controllers, services etc. Check `src/index.ts` for list of filenames that will be automatically loaded.
 
 For now `dependenciesLoader.ts` script is very basic, for more advanced scenarios with nested folders or glob patterns you can use built-in `awilix` [loadModules](https://github.com/jeffijoe/awilix#auto-loading-modules) function.
 
-` `  
-` `  
-` ` 
+# Swagger documentation generator <a name="swagger"></a>
+
+Automatically generated Swagger docs from your model schemas. Zod instance is automatically converted to JSON schema that is provided to Fastify route in order to generate docs, no code duplication.
 
 # Final words <a name="final-words"></a>
 
@@ -275,11 +284,9 @@ Ultimate Starter was designed to be as much flexible as less opinionated as poss
 It is not easy to find the Golden Mean, here is list of things that are currently missing, sorted by importance.
 
 - Error handling
-- Swagger generation
 - GraphQL
 - Authentication
 - Commit hooks
 - Deployment guidelines
 
 If there is something that is missing to achieve the best developer experience possible, please do not hesitate and leave a comment. Your comments may be extremely valuable, other people may encounter the same things you do. Sharing is caring :)
-
